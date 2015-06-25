@@ -1,0 +1,52 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model PagedList<CertCenter.Models.DbModels.certcenterlog>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div>
+    @using (Html.BeginForm("Index", "WorkLog", FormMethod.Post, new { id = "searchForm" }))
+    {
+        <label>关键字:</label>
+        <input type="text" name="keywords" id="keywords" />
+        <input type="submit" value="确定" />
+    }
+</div>
+<div>
+    @Html.Partial("List", Model)
+</div>
+
+@section Scripts{
+
+
+    @{Html.RegisterMvcPagerScriptResource();}
+    <script type="text/javascript">
+        function deletelog(sender) {
+            if (confirm("确定要删除" + $(sender).attr("data-item") + "?")) {
+                $.ajax({
+                    url: '/worklog/deletelog/' + $(sender).attr("data-item"),
+                    type: 'post',
+                    success: function (data) {
+                        if (data.code > 0) {
+                            alert("删除成功");
+                            $(sender).parents("tr").first().remove();
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function (ex) {
+                        alert("你的网络开小差了，请重试。");
+                    }
+                });
+            }
+        }
+
+        function showdetail(sender) {
+            $(sender).siblings().show();
+            $(sender).hide();
+        }
+
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model PagedList<CertCenter.Models.DbModels.app>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div class="wrap_button">
+    @Html.ActionLink("新增", "Edit", null, new { @class = "btn"})
+</div>
+<div id="listcon">
+    @Html.Partial("List", Model)
+</div>
+
+@section Scripts{
+    @{Html.RegisterMvcPagerScriptResource();}
+    <script type="text/javascript">
+        function deleteapp(sender) {
+            var _appid = $(sender).attr("data-item");
+            if (!confirm("你确定要删除 [" + _appid + "] 吗?")) {
+                return;
+            }
+            $.ajax({
+                url: '/app/deleteapp/' + _appid,
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        alert("删除成功");
+                        $(sender).parents("tr").first().remove();
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (ex) {
+                    alert("你的网络开小差了，请重试。");
+                }
+            });
+        }
+    </script>
+}

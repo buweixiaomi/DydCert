@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertCenter", "CertCenter\CertCenter.csproj", "{E061226A-DC31-4F4D-A0DC-285330DEA35C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertComm", "CertComm\CertComm.csproj", "{E2C01C06-D910-4497-8A4F-0FA79B3799D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CertWeb", "CertWeb", "{FC75588B-57FE-486E-A0DD-947122E6E0AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Comm", "Comm", "{AE2B2A79-89CE-4507-A7C5-D1A6891D71C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XXF", "XXF\XXF.csproj", "{9FD9FBB9-D253-4213-9F95-A5665391079E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertSdk", "CertSdk\CertSdk.csproj", "{7A3A14C6-5066-4862-A342-664096DAF648}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertTest", "CertTest\CertTest.csproj", "{146D1783-1477-43C7-B460-A626E4707D7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E061226A-DC31-4F4D-A0DC-285330DEA35C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E061226A-DC31-4F4D-A0DC-285330DEA35C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E061226A-DC31-4F4D-A0DC-285330DEA35C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E061226A-DC31-4F4D-A0DC-285330DEA35C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2C01C06-D910-4497-8A4F-0FA79B3799D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2C01C06-D910-4497-8A4F-0FA79B3799D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2C01C06-D910-4497-8A4F-0FA79B3799D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2C01C06-D910-4497-8A4F-0FA79B3799D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FD9FBB9-D253-4213-9F95-A5665391079E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD9FBB9-D253-4213-9F95-A5665391079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD9FBB9-D253-4213-9F95-A5665391079E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD9FBB9-D253-4213-9F95-A5665391079E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3A14C6-5066-4862-A342-664096DAF648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3A14C6-5066-4862-A342-664096DAF648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3A14C6-5066-4862-A342-664096DAF648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3A14C6-5066-4862-A342-664096DAF648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{146D1783-1477-43C7-B460-A626E4707D7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{146D1783-1477-43C7-B460-A626E4707D7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{146D1783-1477-43C7-B460-A626E4707D7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{146D1783-1477-43C7-B460-A626E4707D7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E2C01C06-D910-4497-8A4F-0FA79B3799D8} = {FC75588B-57FE-486E-A0DD-947122E6E0AD}
+		{E061226A-DC31-4F4D-A0DC-285330DEA35C} = {FC75588B-57FE-486E-A0DD-947122E6E0AD}
+		{9FD9FBB9-D253-4213-9F95-A5665391079E} = {AE2B2A79-89CE-4507-A7C5-D1A6891D71C3}
+	EndGlobalSection
+EndGlobal

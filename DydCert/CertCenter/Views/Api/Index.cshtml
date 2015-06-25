@@ -1,0 +1,245 @@
+﻿@model  Dictionary<string, List<CertCenter.Models.DbModels.appcategory>>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div id="main_api">
+    <div id="left_category" class="left_float_menu">
+        <h3>所有接口分类</h3>
+        <ul>
+            @foreach (KeyValuePair<string, List<CertCenter.Models.DbModels.appcategory>> kvp in Model)
+            {
+                <li>
+                    <p>@kvp.Key</p>
+                    <ul>
+                        @foreach (var a in kvp.Value)
+                        {
+                            <li class="api_category_li" onclick="showapis(this)" data-apptype="@a.apptype" data-categoryid="@a.categoryid" title="@a.categorydesc" ><a href="javascript:void(0);">@a.categorytitle</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
+    <div id="center_apis" class="left_float_menu">
+        <h3>接口列表</h3>
+        <div>
+            
+            <input type="button" value="添加接口" onclick="addnew()" />
+            <input type="button" value="保存" onclick="save()" />
+            
+            <input type="button" value="删除" onclick="deleteapi()" />
+        </div>
+        <ul id="api_list_ul"></ul>
+    </div>
+    <div id="right_apidetails" class="left_float_menu">
+        <h3>接口详情</h3>
+        <div>
+            <form id="myform">
+                <ul>
+                    <li>
+                        <label>api编号:</label>
+                        <input type="text" name="apiid" id="apiid"  readonly="readonly"/>
+                        <input type="hidden" name="apptype" id="apptype" />
+                        <input type="hidden" name="categoryid" id="categoryid" />
+                    </li>
+                    <li>
+                        <label>名称:</label>
+                        <input type="text" name="apiname" id="apiname" />
+                    </li>
+                    <li>
+                        <label>标题:</label>
+                        <input type="text" name="apititle" id="apititle" />
+                    </li>
+                    <li>
+                        <label>接口等级:</label>
+                        <select name="appgradeno" id="appgradeno"></select>
+                    </li>
+                    <li>
+                        <label>是否冻结:</label>
+                        <select name="freeze" id="freeze">
+                            <option value="0">非冻结</option>
+                            <option value="1">冻结</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label>area:</label>
+                        <input type="text" name="area" id="area" />
+                    </li>
+                    <li>
+                        <label>controller:</label>
+                        <input type="text" name="controller" id="controller" />
+                    </li>
+                    <li>
+                        <label>action:</label>
+                        <input type="text" name="action" id="action" />
+                    </li>
+                    <li>
+                        <label>para:</label>
+                        <input type="text" name="para" id="para" />
+                    </li>
+                    <li>
+                        <label>接口说明:</label>
+                        <textarea name="apidesc" id="apidesc"></textarea>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+@section Styles{
+ @*   <style type="text/css">
+        #main_api { width: 1200px; }
+        #left_category { width: 250px; float: left; }
+        #center_apis { width: 400px; float: left; }
+        #right_apidetails { width: 400px; float: left; }
+    </style>*@
+}
+
+@section Scripts{<script src="~/Scripts/comm.js"></script><script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script type="text/javascript">
+        function showapis(sender) {
+            cleartxt();
+            $(".api_category_li").removeClass("curr");
+            $(sender).addClass("curr");
+            $("#api_list_ul").html("");
+            $("#categoryid").val($(sender).attr("data-categoryid"));
+            $("#apptype").val($(sender).attr("data-apptype"));
+            refillgrades($(sender).attr("data-apptype"));
+            $.ajax({
+                url: '/api/GetApiList',
+                type: 'post',
+                data: { apptype: $(sender).attr("data-apptype"), categoryid: $(sender).attr("data-categoryid") },
+                success: function (data) {
+                    if (data.code > 0) {
+                        for (var i = 0; i < data.response.length; i++) {
+                            $("#api_list_ul").append(createli(data.response[i]));
+                            $("#appgradeno").val(data.response.appgradeno);
+                        }
+                    } else {
+                        $("#api_list_ul").html(data.msg);
+                    }
+                },
+                error: function (data) {
+                    $("#api_list_ul").html("你的网络开小差了，请重试。");
+                }
+            });
+        }
+
+        function createli(obj) {
+            var li = "<li class=\"api_li\" id=\"api_" + obj.apiid + "\" onclick=\"shopapidetails('" + obj.apiid + "')\"><p class=\"api_name\">" + obj.apiname + "</p><p class=\"api_url\">" + buildurl(obj.area, obj.controller, obj.action, obj.para) + "</p><p class=\"api_title\">" + obj.apititle + "</p></li>";
+            return li;
+        }
+
+        function buildurl(arae, controller, action, para) {
+            var url = "/" + arae + "/" + controller + "/" + action + (para ? "?" + para : "");
+            return url.replace("//", "/").replace("//", "/");
+        }
+
+        function shopapidetails(apiid) {
+            $(".api_li").removeClass("curr");
+            $("#api_" + apiid).addClass("curr");
+            $.ajax({
+                url: '/api/apidetails/' + apiid,
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        cleartxt();
+                        $("#myform input,#myform select,#myform textarea").each(function () {
+                            $(this).val(data.response[$(this).attr("name")]);
+                        });
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (ex) {
+                    alert("你的网络开小差了，请重试。");
+                }
+
+            });
+        }
+
+        function cleartxt() {
+            $("#myform input").val("");
+            $("#appgradeno").val("");
+            $("#apiid").attr("readonly", "readonly");
+        }
+
+        function addnew() {
+            cleartxt();
+            if ($(".curr").length == 0) {
+                alert("请选择应用分类。");
+                return;
+            }
+            $("#apiid").val("自动生成");
+            $("#categoryid").val($(".curr").attr("data-categoryid"));
+            $("#apptype").val($(".curr").attr("data-apptype"));
+        }
+
+        function save() {
+            if (!$("#categoryid").val() || !$("#apptype").val()) {
+                alert("请选择应用分类。");
+                return;
+            }
+            if ($("#apititle").val() == "") {
+                alert("请输入接口标题。");
+                return;
+            }
+            var vals = $("#myform").serialize();
+            $.ajax({
+                url: '/api/edit',
+                data: vals,
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        if ($("#apiid").val() == "自动生成") {
+                            $("#api_list_ul").append(createli(data.response));
+                        } else {
+                            $("#api_" + $("#apiid").val()).replaceWith(createli(data.response));
+                        }
+                        shopapidetails(data.response.apiid);
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (ex) {
+                    alert("你的网络开小差了，请重试。");
+                }
+            });
+        }
+
+        function deleteapi() {
+            if ($(".api_li,curr").length == 0) {
+                alert("请选择要删除的项。");
+                return;
+            }
+            var _apiid = $("#apiid").val();
+            parseInt(_apiid);
+            if (isNaN(_apiid) || _apiid == 0) {
+                alert("请选择要删除的项。");
+                return;
+            }
+            if (!confirm("你确定要删除" + _apiid + "的接口吗?")) {
+                return;
+            }
+            $.ajax({
+                url: '/api/deleteapi/' + _apiid,
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        $("#api_" + _apiid).remove();
+                        cleartxt();
+                        alert("删除成功");
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (ex) {
+                    alert("你的网络开小差了，请重试。");
+                }
+            });
+        }
+
+    </script>
+}

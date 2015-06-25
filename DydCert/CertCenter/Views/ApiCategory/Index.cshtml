@@ -1,0 +1,205 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+@section Scripts
+{
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/zTree/jquery.ztree.all-3.5.js"></script>
+    <link href="~/Content/zTree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/xpinfodialog.js"></script>
+    <script type="text/javascript">
+        var setting = {
+            view: {
+                showIcon: showIconForTree
+            },
+            async: {
+                enable: true,
+                url: "/apicategory/GetApiCategoryData",
+                autoParam: ["id", "name=n", "level=lv"],
+                otherParam: { "otherParam": "zTreeAsyncTest" },
+                dataFilter: filter
+            },
+            callback: {
+                beforeAsync: beforeAsynca,
+                onClick: shopdetails
+            },
+            check: {
+                enable: false
+            }
+        };
+        function showIconForTree(treeId, treeNode) {
+            return treeNode.getParentNode();
+        };
+        function filter(treeId, parentNode, childNodes) {
+            if (!childNodes) return null;
+            for (var i = 0, l = childNodes.length; i < l; i++) {
+                childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+            }
+            return childNodes;
+        }
+
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting);
+            cleartxt();
+        });
+
+        function beforeAsynca(a, b, c) {
+
+        }
+
+        function shopdetails(event, treeId, treeNode) {
+            var pnode = treeNode.getParentNode();
+            if (!pnode) {
+                return;
+            }
+            $.ajax({
+                url: '/apicategory/GetApiCategoryInfo',
+                data: { apptype: treeNode.id.split('_')[0], categoryid: treeNode.id.split('_')[1] },
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        cleartxt();
+                        $("#apptype").val(data.response.apptype);
+                        $("#categoryid").val(data.response.categoryid);
+                        $("#categoryidtxt").val(data.response.categoryid);
+                        $("#categorytitle").val(data.response.categorytitle);
+                        $("#categorydesc").val(data.response.categorydesc);
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("你的网络开小差了，请重试");
+                }
+            });
+        }
+
+        function cleartxt() {
+            $("#apptype").val("");
+            $("#categoryid").val("");
+            $("#categorytitle").val("");
+            $("#categorydesc").val("");
+            $("#categoryidtxt").val("");
+            $("#categoryidtxt").attr("disabled", "disabled");
+        }
+
+        //添加按钮 
+        function addnew() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = zTree.getSelectedNodes();
+            if (nodes && nodes.length > 0) {
+                var t = nodes[0].getParentNode();
+                if (!t) {
+                    t = nodes[0];
+                }
+                cleartxt();
+                $("#apptype").val(t.id);
+                $("#categoryidtxt").val("自动生成");
+            }
+            else {
+                xpinfodialog.show("请选择要添加分类所在类型");
+            }
+        }
+
+        function save() {
+            if ($("#apptype").val() != "") {
+                if ($("#categorytitle").val() == "") {
+                    xpinfodialog.show("分类名称不能为空！");
+                    $("#categorytitle").focus();
+                }
+                else {
+                    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                    $.ajax({
+                        url: '/apicategory/edit',
+                        data: { apptype: $("#apptype").val(), categoryid: $("#categoryid").val(), categorytitle: $("#categorytitle").val(), categorydesc: $("#categorydesc").val() },
+                        type: 'post',
+                        success: function (data) {
+                            if (data.code > 0) {
+                                if ($("#categoryid").val()) {//修改
+                                    var node = treeObj.getNodeByParam("id", $("#apptype").val() + "_" + $("#categoryid").val(), null);
+                                    node.name = $("#categorytitle").val();
+                                    treeObj.updateNode(node);
+                                    xpinfodialog.show("修改成功");
+                                } else {
+                                    var node = treeObj.getNodeByParam("id", $("#apptype").val(), null);
+                                    treeObj.addNodes(node, { name: data.response.categorytitle, id: data.response.apptype + "_" + data.response.categoryid });
+                                    xpinfodialog.show("添加成功");
+                                }
+                            } else {
+                                xpinfodialog.show(data.msg);
+                            }
+                        }
+                    });
+                }
+            } else {
+                xpinfodialog.show("无保存项！");
+            }
+        }
+
+        function refreshtree() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            treeObj.reAsyncChildNodes(null, "refresh");
+            cleartxt();
+        }
+
+
+        function deletecategory() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = zTree.getSelectedNodes();
+            if (nodes && nodes.length == 1 && nodes[0].getParentNode()) {
+                var treeNode = nodes[0];
+                if (!confirm("你确定要删除 [" + treeNode.name + "] 吗?")) {
+                    return;
+                }
+                $.ajax({
+                    url: '/apicategory/delete',
+                    data: { apptype: treeNode.id.split('_')[0], categoryid: treeNode.id.split('_')[1] },
+                    type: 'post',
+                    success: function (data) {
+                        if (data.code > 0) {
+                            xpinfodialog.show("删除成功");
+                            zTree.removeNode(treeNode);
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function () {
+                        alert("你的网络开小差了，请重试");
+                    }
+                });
+            }
+            else {
+                xpinfodialog.show("请选择一个分类");
+            }
+        }
+
+    </script>
+}
+<div id="categorylist" class="left_float_menu">
+    <ul id="treeDemo" class="ztree"></ul>
+</div>
+<div class="left_float_wrap">
+    <div class="wrap_button">
+        <input type="button" value="刷新" onclick="refreshtree()" />
+        <input type="button" value="新增" onclick="addnew()" />
+        <input type="button" value="删除" onclick="deletecategory()" />
+        <input type="button" value="保存" onclick="save()" />
+    </div>
+    <ul>
+        <li>
+            <label>分类编号:</label>
+            <input type="hidden" id="apptype" />
+            <input type="hidden" name="categoryid" id="categoryid" />
+            <input type="text" name="categoryidtxt" id="categoryidtxt" />
+        </li>
+        <li>
+            <label>分类名称:</label>
+            <input type="text" name="categorytitle" id="categorytitle" />
+        </li>
+        <li>
+            <label>分类分类说明:</label>
+            <input type="text" name="categorydesc" id="categorydesc" />
+        </li>
+    </ul>
+</div>

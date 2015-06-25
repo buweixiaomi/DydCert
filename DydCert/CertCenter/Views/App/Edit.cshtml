@@ -1,0 +1,99 @@
+﻿@model CertCenter.Models.DbModels.app
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+@{
+    List<SelectListItem> apptypes = new List<SelectListItem>();
+    apptypes.Add(new SelectListItem() { Text = CertCenter.Models.CertCenterComm.APPTYPENAME[0], Value = "0" });
+    apptypes.Add(new SelectListItem() { Text = CertCenter.Models.CertCenterComm.APPTYPENAME[1], Value = "1" });
+    apptypes.Add(new SelectListItem() { Text = CertCenter.Models.CertCenterComm.APPTYPENAME[2], Value = "2" });
+
+
+    List<SelectListItem> appgrades = new List<SelectListItem>();
+    if (ViewBag.appgrades != null)
+    {
+        List<CertCenter.Models.DbModels.appgrade> listgrade = (List<CertCenter.Models.DbModels.appgrade>)ViewBag.appgrades;
+        foreach (var a in listgrade)
+        {
+            appgrades.Add(new SelectListItem() { Text = a.appgradeno + "-" + a.appgradename, Value = a.appgradeno.ToString() });
+        }
+    }
+}
+
+
+
+<div>
+    @using (Html.BeginForm("Edit", "app", FormMethod.Post))
+    {
+        <ul>
+            <li class="item">
+                <label>应用key:</label>
+                @if (Model == null)
+                {
+                    @Html.TextBoxFor(x => x.appid) <span>空时自动生成</span>
+                    @Html.ValidationMessageFor(x => x.appid)
+                }
+                else
+                {
+                    @Html.TextBoxFor(x => x.appid, new { @readonly = "readonly" })
+                }
+                <input type="hidden" name="act" value="@ViewBag.act" />
+            </li>
+            <li>
+                <label>应用密钥:</label>
+                @Html.TextBoxFor(x => x.appsecret)
+            </li>
+            <li>
+                <label>应用名称:</label>
+                @Html.TextBoxFor(x => x.appname)
+                @Html.ValidationMessageFor(x => x.appname)
+            </li>
+
+            <li>
+                <label>应用类型:</label>
+                @Html.DropDownListFor(x => x.apptype, apptypes)
+            </li>
+
+            <li>
+                <label>应用级别:</label>
+                @Html.DropDownListFor(x => x.appgradeno, appgrades)
+                @Html.ValidationMessageFor(x => x.appgradeno)
+            </li>
+
+
+            <li>
+                <label>是否冻结:</label>
+                @{
+                List<SelectListItem> freezelist = new List<SelectListItem>();
+                freezelist.Add(new SelectListItem() { Text = "冻结", Value = "1" });
+                freezelist.Add(new SelectListItem() { Text = "非冻结", Value = "0" });
+                }
+                @Html.DropDownListFor(x => x.freeze, freezelist)
+            </li>
+            <li>
+                <label>应用名称:</label>
+                @Html.TextAreaFor(x => x.appdesc)
+            </li>
+
+        </ul>
+       <p style="padding-left:50px; margin-top:20px;"> <input type="submit" value="保存" /></p>
+        @Html.ValidationSummary()
+
+    }
+</div>
+
+
+@section Scripts{
+    <script src="~/Scripts/comm.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#apptype").change(function () {
+                refillgrades($("#apptype").val());
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,85 @@
+﻿* { margin: 0; padding: 0; font-size: 16px; font-family: 'Microsoft YaHei UI','Microsoft YaHei'; }
+input[type="button"], input[type="submit"], input[type="search"] { background-color: #0072c6; border: none; padding: 5px 10px; cursor: pointer; color: white; }
+    input[type="button"]:hover, input[type="submit"]:hover, input[type="search"] :hover { background-color: #3d7dfe; }
+.btn, .bigbtn { background-color: #0072c6; border: none; padding: 5px 10px; cursor: pointer; color: white; }
+    .btn:hover, .bigbtn:hover { background-color: #3d7dfe; cursor: pointer; }
+.bigbtn { padding: 8px 15px; }
+input[type="text"], textarea { border: 1px #0072c6 solid; font-family: 'Microsoft YaHei','SimHei'; padding: 4px 2px; font-size: 15px; height: 18px; width: 300px; margin: 4px; }
+    input[type="text"]:hover, textarea:hover { border: 1px rgb(112, 194, 216) solid; }
+textarea { height: 60px; }
+.mintxt { width: 30px; }
+.pager_page input[type="text"] { width: 30px; }
+li label { width: 100px; display: inline-block; text-align: right; }
+
+input[readonly="readonly"], input[disabled="disabled"] { background-color: #b7b7b7; }
+
+.left_float_menu { float: left; width: 200px; margin: 10px; padding: 0 5px; }
+.left_float_wrap { float: left; margin: 10px; }
+ul { list-style-type: none; margin-left: 12px; }
+    ul li { list-style-type: none; margin-left: 10px; }
+
+
+table { border: 0; margin: 0; border-collapse: collapse; border-spacing: 0; }
+    table tr td { border-top: 1px rgba(147, 169, 195, 0.76) solid; border-bottom: 1px rgba(147, 169, 195, 0.76) solid; font-size: 14px; }
+    table tr:hover { background-color: #e7e7e7; }
+    table thead, table th { background-color: #3d7dfe; background-color: white; font-weight: bold; }
+/* tables
+----------------------------------------------------------*/
+table { border-collapse: collapse; border-spacing: 0; margin-top: 0.75em; border: 0 none; min-width: 500px; }
+
+th { font-size: 1.2em; text-align: left; border: none 0px; padding-left: 0; }
+
+    th a { display: block; position: relative; }
+
+        th a:link, th a:visited, th a:active, th a:hover { color: #333; font-weight: 600; text-decoration: none; padding: 0; }
+
+        th a:hover { color: #000; }
+
+    th.asc a, th.desc a { margin-right: .75em; }
+
+        th.asc a:after, th.desc a:after { display: block; position: absolute; right: 0em; top: 0; font-size: 0.75em; }
+
+        th.asc a:after { content: '▲'; }
+
+        th.desc a:after { content: '▼'; }
+
+td { padding: 0.25em 2em 0.25em 0em; border: 0 none; }
+
+tr.pager td { padding: 0 0.25em 0 0; }
+
+a { color: #1364c4; }
+    a:hover { color: rgba(96, 198, 226, 1); }
+#topwrap { height: 55px; background: #000; padding: 8px; }
+.account_wrap { float: right; color: white; }
+    .account_wrap a { color: white; }
+        .account_wrap a:hover { color: #808080; }
+
+.float_left { float: left; }
+.ztree { width: 300px; }
+.wrap_button { height: 50px; margin: 5px 10px; }
+/*topmenu*/
+#topmanu { height: 40px; background-color: black; color: white; }
+    #topmanu ul { list-style-type: none; }
+        #topmanu ul li { list-style-type: none; float: left; margin: 5px 10px; }
+    #topmanu a { text-decoration: none; font-size: 18px; color: #eee; }
+        #topmanu a:hover { text-decoration: underline; color: #1364c4; }
+
+
+#api_list_ul li { border-bottom: 1px solid #0072c6; margin: 6px 4px; padding: 4px; list-style-type: disc; }
+    #api_list_ul li:hover { cursor: pointer; background-color: #eee; }
+.curr { border-left: 10px solid #1364c4; font-weight: bold; background-color: #eee; }
+
+#center_apis { width: 400px; }
+#left_category { font-size: 17px; }
+    #left_category li { margin: 1px 4px; padding: 5px 2px; }
+    #left_category ul li, api_category_li, .api_category_li a { border-bottom: none; text-decoration: none; font-size: 16px; }
+
+#mainwrap { padding: 10px 30px; margin-bottom: 60px; }
+#right_apidetails { width: 500px; }
+select { margin-left: 5px; }
+.curr_page { background-color: #3d7dfe; padding: 5px 10px; }
+
+#footer { clear: both; height: 60px; background-color: rgba(237, 237, 237, 1); position: fixed; bottom: 0; left: 0; width: 100%; padding: 5px; }
+
+
+table tr td, table tr td div { font-size: 13px; }

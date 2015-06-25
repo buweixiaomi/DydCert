@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+@section Scripts
+{
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/zTree/jquery.ztree.all-3.5.js"></script>
+    <link href="~/Content/zTree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/xpinfodialog.js"></script>
+    <script type="text/javascript">
+        var setting = {
+            view: {
+                showIcon: showIconForTree,
+                fontCss: {}
+            },
+            async: {
+                enable: true,
+                url: "/appgrade/GetAppGradeData",
+                autoParam: ["id", "name=n", "level=lv"],
+                otherParam: { "otherParam": "zTreeAsyncTest" },
+                dataFilter: filter
+            },
+            callback: {
+                beforeAsync: beforeAsynca,
+                onClick: shopdetails
+            },
+            check: {
+                enable: false
+            }
+        };
+        function showIconForTree(treeId, treeNode) {
+            return treeNode.getParentNode();
+        };
+
+        function filter(treeId, parentNode, childNodes) {
+            if (!childNodes) return null;
+            for (var i = 0, l = childNodes.length; i < l; i++) {
+                childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+            }
+            return childNodes;
+        }
+
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting);
+            cleartxt();
+        });
+
+        function beforeAsynca(a, b, c) {
+
+        }
+
+        function shopdetails(event, treeId, treeNode) {
+            var pnode = treeNode.getParentNode();
+            if (!pnode) {
+                return;
+            }
+            $.ajax({
+                url: '/appgrade/GetAppgradeInfo',
+                data: { apptype: treeNode.id.split('_')[0], appgradeno: treeNode.id.split('_')[1] },
+                type: 'post',
+                success: function (data) {
+                    if (data.code > 0) {
+                        cleartxt();
+                        $("#apptype").val(data.response.apptype);
+                        $("#appgradeno").val(data.response.appgradeno);
+                        $("#appgradenotxt").val(data.response.appgradeno);
+                        $("#appgradename").val(data.response.appgradename);
+                        $("#appgradedesc").val(data.response.appgradedesc);
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("你的网络开小差了，请重试");
+                }
+            });
+        }
+
+        function cleartxt() {
+            $("#apptype").val("");
+            $("#appgradeno").val("");
+            $("#appgradename").val("");
+            $("#appgradedesc").val("");
+
+            $("#appgradenotxt").val("");
+            $("#appgradenotxt").attr("disabled", "disabled");
+        }
+
+        //添加按钮 
+        function addnew() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = zTree.getSelectedNodes();
+            if (nodes && nodes.length > 0) {
+                var t = nodes[0].getParentNode();
+                if (!t) {
+                    t = nodes[0];
+                }
+                cleartxt();
+                $("#apptype").val(t.id);
+                $("#appgradenotxt").val("自动生成");
+            }
+            else {
+                xpinfodialog.show("请选择要添加等级所在类型");
+            }
+        }
+
+        function save() {
+            if ($("#apptype").val() != "") {
+                if ($("#appgradename").val() == "") {
+                    xpinfodialog.show("级别名称不能为空！");
+                    $("#appgradename").focus();
+                }
+                else {
+                    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                    $.ajax({
+                        url: '/appgrade/edit',
+                        data: { apptype: $("#apptype").val(), appgradeno: $("#appgradeno").val(), appgradename: $("#appgradename").val(), appgradedesc: $("#appgradedesc").val() },
+                        type: 'post',
+                        success: function (data) {
+                            if (data.code > 0) {
+                                if ($("#appgradeno").val()) {//修改
+                                    var node = treeObj.getNodeByParam("id", $("#apptype").val() + "_" + $("#appgradeno").val(), null);
+                                    node.name = $("#appgradename").val();
+                                    treeObj.updateNode(node);
+                                    xpinfodialog.show("修改成功");
+                                } else {
+                                    var node = treeObj.getNodeByParam("id", $("#apptype").val(), null);
+                                    treeObj.addNodes(node, { name: data.response.appgradename, id: data.response.apptype + "_" + data.response.appgradeno });
+                                    xpinfodialog.show("添加成功");
+                                }
+                            } else {
+                                xpinfodialog.show(data.msg);
+                            }
+                        }
+                    });
+                }
+            } else {
+                xpinfodialog.show("无保存项！");
+            }
+        }
+
+        function refreshtree() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            treeObj.reAsyncChildNodes(null, "refresh");
+            cleartxt();
+        }
+
+
+        function deletecategory() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = zTree.getSelectedNodes();
+            if (nodes && nodes.length == 1 && nodes[0].getParentNode()) {
+                var treeNode = nodes[0];
+                if (!confirm("你确定要删除 [" + treeNode.name + "] 吗?")) {
+                    return;
+                }
+                $.ajax({
+                    url: '/appgrade/delete',
+                    data: { apptype: treeNode.id.split('_')[0], appgradeno: treeNode.id.split('_')[1] },
+                    type: 'post',
+                    success: function (data) {
+                        if (data.code > 0) {
+                            xpinfodialog.show("删除成功");
+                            zTree.removeNode(treeNode);
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function () {
+                        alert("你的网络开小差了，请重试");
+                    }
+                });
+            }
+            else {
+                xpinfodialog.show("请选择一个分类");
+            }
+        }
+
+    </script>
+}
+<div id="gradelist" class="left_float_menu">
+    <ul id="treeDemo" class="ztree"></ul>
+</div>
+<div class="left_float_wrap">
+    <div class="wrap_button">
+        <input type="button" value="刷新" onclick="refreshtree()" />
+        <input type="button" value="新增" onclick="addnew()" />
+        <input type="button" value="删除" onclick="deletecategory()" />
+        <input type="button" value="保存" onclick="save()" />
+    </div>
+    <ul>
+        <li>
+            <label>分类编号:</label>
+            <input type="hidden" id="apptype" />
+            <input type="hidden" name="appgradeno" id="appgradeno" />
+            <input type="text" name="appgradenotxt" id="appgradenotxt" />
+        </li>
+        <li>
+            <label>分类名称:</label>
+            <input type="text" name="appgradename" id="appgradename" />
+        </li>
+        <li>
+            <label>分类分类说明:</label>
+            <input type="text" name="appgradedesc" id="appgradedesc" />
+        </li>
+    </ul>
+</div>

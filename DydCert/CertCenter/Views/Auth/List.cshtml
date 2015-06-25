@@ -1,0 +1,33 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model PagedList<CertCenter.Models.DbModels.tb_token>
+
+<table>
+    <tr>
+        <th>应用ID</th>
+        <th>ID</th>
+        <th>用户id</th>
+        <th>用户名</th>
+        <th>token</th>
+        <th>创建时间</th>
+        <th>过期时间</th>
+        <th></th>
+    </tr>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.appid</td>
+            <td>@a.id</td>
+            <td>@a.userid</td>
+            <td>@a.username</td>
+            <td>@a.token</td>
+            <td>@a.createtime</td>
+            <td>@a.expires</td>
+            <td><a href="javascript:void(0);" onclick="deletetoken(this)" data-item="@a.token">删除</a></td>
+        </tr>
+    }
+</table>
+
+<div class="list_page">
+    <div class="fl total">共<em>@Model.TotalPageCount</em>页<em>@Model.TotalItemCount</em>条记录，当前为第<em>@Model.CurrentPageIndex</em>页</div>
+    @Ajax.Pager(Model, new PagerOptions { PageIndexParameterName = "pno", ShowPageIndexBox = true, PageIndexBoxType = PageIndexBoxType.TextBox, ShowGoButton = true }, new MvcAjaxOptions { UpdateTargetId = "listcon", HttpMethod = "Post", DataFormId = "searchForm" }, new { @class = "pager_page" })
+</div>

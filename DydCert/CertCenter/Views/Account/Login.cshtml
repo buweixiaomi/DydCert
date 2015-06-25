@@ -1,0 +1,121 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <style type="text/css">
+        #tipmsg { color: red; }
+    </style>
+    <script type="text/javascript">
+        function validateinput() {
+            if (!document.getElementById("userid").value) {
+                document.getElementById("tipmsg").innerHTML = "请输入用户名";
+                return false;
+            }
+            if (!document.getElementById("pwd").value) {
+                document.getElementById("tipmsg").innerHTML = "请输入密码";
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <style type="text/css">
+        ul { list-style-type:none;}
+            ul li { list-style-type:none;}
+        .login_form { font-size:18px; margin-top:100px; }
+        input[type="text"], input[type="password"]{ width:200px; height:25px; padding:3px; font-size:18px;  margin:8px 4px; }
+        input[type="text"]:hover, input[type="password"]:hover { border:1px solid #2672ec; }
+        input[type="button"],input[type="submit"]{ background-color:#2672ec; color:white; padding:4px 20px; border:none; font-size:18px;}
+        .btnbox { margin-left:50px; }
+        label { width:80px; text-align:center; display:inline-block}
+    </style>
+</head>
+
+<body>
+    <div id="content_wrap" style="width:935px; margin-left:auto; margin-right:auto; margin-top:40px;">
+
+        <div style="width:350px; height:400px; background-color:#2672ec; float:left;">
+            @ViewBag.appname
+            NO Image...
+            这里登录的是crm账号
+        </div>
+            <div style="float:left;" class="login_form">
+                <form method="post">
+                    <ul>
+                        <li>
+                            <label>用户名:</label>
+                            <input id="userid" type="text" name="userid" value="@ViewBag.userid" />
+                        </li>
+                        <li>
+                            <label>密　码:</label>
+                            <input type="password" name="pwd" id="pwd" value="@ViewBag.pwd"  />
+                        </li>
+                    </ul>
+                    <p class="btnbox">
+                        <input type="submit" onclick="return validateinput();" value="登录" /><span id="tipmsg">@ViewBag.msg</span>
+                    </p>
+                </form>
+            </div>
+
+    </div>
+    <div id="footer">
+        <style>
+            * { line-height: 142%; }
+            div.centerParent, td.centerParent { text-align: center; }
+            div.footer { font-size: 86%; background-color: #eee; position: fixed; height: 88px; bottom: 0px; left: 0px; right: 0px; width: auto; z-index: 250000; }
+            body { margin: 0; font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif; color: #000; background-color: #fff; background-image: none; background-repeat: repeat; background-position: top left; direction: ltr; font-size: 88%; -webkit-font-smoothing: antialiased; }
+            body { display: none; }
+            body { display: block !important; }
+            html { overflow: auto; }
+            div.center, table.center { margin-left: auto; margin-right: auto; text-align: left; }
+            table.footer { width: 100%; padding: 17px 0 20px; }
+            td.footerspace { width: 10px; }
+            .secondary, .help { color: #666; }
+            span.ltr { display: inline-block; direction: ltr; }
+            a { font-weight: inherit; text-decoration: none; color: #2672ec; cursor: pointer; }
+                a.footerlink { color: #2672ec; }
+            div.footer div.mslogo { width: 68px; height: 16px; margin-top: 19px; float: right; background-image: url(hig/img/controls.png); background-position: left -774px; }
+            input[type="submit"]:hover { background-color:#6291dd;}
+        </style>
+        <div class="footer centerParent" id="footerTD" style="clear: both; margin-left: 0px;">
+            <div class="center" style="width: 895px;">
+                <div class="mslogo" id="idDiv_MSLogo"></div>
+            </div>
+            <div class="center" style="width: 895px; clear: both;">
+                <table class="footer" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td align="right">
+                                <table cellspacing="0" cellpadding="0">
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: right;"><span></span></td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td style="text-align: right;"> </td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td style="text-align: right;"> </td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td style="text-align: right;"> </td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td class="footerspace" aria-hidden="true">&nbsp;</td>
+                                            <td style="text-align: right;"><span class="secondary ltr" id="ftrCopy">©2014 dyd</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

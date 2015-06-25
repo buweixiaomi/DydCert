@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    @RenderSection("Styles", required: false)
+    @RenderSection("Scripts", required: false)
+
+    @{
+        string contr = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    }
+</head>
+<body>
+    <div id="topwrap">
+        <div class="account_wrap">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p>@User.Identity.Name @Html.ActionLink("退出", "signout", "account")</p>
+            }
+            else
+            {
+                <p>还未登录，请选 @Html.ActionLink("登录", "login", "account")</p>
+            }
+        </div>
+    </div>
+    <div id="topmanu">
+        <ul>
+            <li>@Html.ActionLink("应用等级管理", "Index", "Appgrade",null,new { @class = (contr == "Appgrade".ToLower() ? "curr_page" : "") })</li>
+            <li>@Html.ActionLink("接口分类管理", "Index", "apicategory", null,new { @class = (contr == "apicategory".ToLower() ? "curr_page" : "") })</li>
+            <li>@Html.ActionLink("应用管理", "Index", "app", null,new { @class = (contr == "app".ToLower() ? "curr_page" : "") })</li>
+            <li>@Html.ActionLink("接口管理", "Index", "api", null,new { @class = (contr == "api".ToLower() ? "curr_page" : "") })</li>
+            <li>@Html.ActionLink("授权管理", "Index", "auth", null,new { @class = (contr == "auth".ToLower() ? "curr_page" : "") })</li>
+            <li>@Html.ActionLink("操作日志", "Index", "worklog", null,new { @class = (contr == "worklog".ToLower() ? "curr_page" : "") })</li>
+        </ul>
+    </div>
+    <div id="mainwrap">
+        <div id="mainbody">
+            @RenderBody()
+        </div>
+    </div>
+    <div id="footer">
+        <p>Welcome to CertCenter.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+﻿*{margin: 0;padding: 0;}
+ul,li{list-style: none;}
+.xpdialog_close_button{background-image:url(../images/icon.png);background-repeat: no-repeat;}
+.xpdialog {
+  border: 1px solid #fff;
+  width:400px; 
+  padding:0;
+  display:none;
+  z-index:999;
+  background-color: #fff;
+  font-size: 15px;
+  border-radius: 4px;
+}
+.xpdialog_close_button{ 
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-indent: -9999em;
+  background-position:3px -238px;
+}
+.xpdialog_close_button:hover{background-position:-15px -238px;}
+.xpdialog_title { 
+  height: 30px;
+  line-height: 30px;
+  text-indent: 0.5em;
+  font-weight: bold;
+  color: #fff;
+  background:#2FA9CF;
+  border-radius:4px 4px 0 0;
+}
+.xpdialog_opbuttons {  
+  text-align: right;
+  width: 100%;
+  padding: 5px 0;
+  background-color: #FAFAFA;
+  border-top: 1px solid #E4E4E4;
+  border-radius: 0 0 4px 4px;
+}
+.xpdialog_opbuttons [type="button"] { 
+  font-size: 12px;
+  font-family: microsoft yahei;
+  color: #3F3F3F;
+  margin-right: 10px;
+  display: inline-block;
+  padding: 0 10px;
+  height: 28px;
+  line-height: 28px;
+  border: 1px solid rgba(215, 213, 213, 1);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.xpdialog_opbuttons [type="button"]:hover{
+  border-color: #999999;color: #000;
+}
+.xpdialog_opbuttons input.btn_cancle{
+  background-position:-220px -4px;
+}
+.xpdialog_content{
+  min-height: 100px; 
+}
+.xpdialog_content li{
+  margin: 0 10px;
+  padding: 5px 0;
+}
+.xpdialog_content li label{
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+  color: #666;
+}
+.xpdialog_content li span{
+  display: inline-block;
+}
+.xpdialog input[type="text"]{
+  padding: 3px;
+  border:1px solid #ccc;
+}

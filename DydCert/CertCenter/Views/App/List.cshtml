@@ -1,0 +1,36 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model PagedList<CertCenter.Models.DbModels.app>
+
+<table>
+    <thead>
+        <tr>
+            <th>应用名称</th>
+            <th>应用类型</th>
+            <th>应用ID</th>
+            <th>应用密钥</th>
+            <th>应用级别</th>
+            <th>是否冻结</th>
+            <th>应用描述</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x => a.appname)</td>
+                <td>@CertCenter.Models.CertCenterComm.APPTYPENAME[a.apptype]</td>
+                <td>@Html.DisplayFor(x => a.appid)</td>
+                <td>@Html.DisplayFor(x => a.appsecret)</td>
+                <td>@Html.DisplayFor(x => a.appgradeno) @Html.DisplayFor(x => a.appgrade.appgradename)</td>
+                <td>@(a.freeze == 1 ? "已冻结" : "未冻结")</td>
+                <td>@Html.DisplayFor(x => a.appdesc)</td>
+                <td>@Html.ActionLink("修改", "Edit", new { id = a.appid }) <a href="javascript:void(0);" onclick="deleteapp(this)" data-item="@a.appid">删除</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="list_page">
+    <div class="fl total">共<em>@Model.TotalPageCount</em>页<em>@Model.TotalItemCount</em>条记录，当前为第<em>@Model.CurrentPageIndex</em>页</div>
+    @Ajax.Pager(Model, new PagerOptions { PageIndexParameterName = "pno", ShowPageIndexBox = true, PageIndexBoxType = PageIndexBoxType.TextBox, ShowGoButton = true }, new MvcAjaxOptions { UpdateTargetId = "listcon", HttpMethod = "Post", DataFormId = "searchForm" }, new { @class = "pager_page" })
+</div>
