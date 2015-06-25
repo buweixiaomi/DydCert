@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{146D1783-1477-43C7-B460-A626E4707D7F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F39E642A-039A-4A59-9B2B-FB9718A1D9C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CertTest</RootNamespace>
-    <AssemblyName>CertTest</AssemblyName>
+    <RootNamespace>ApiInvokeMap</RootNamespace>
+    <AssemblyName>ApiInvokeMap</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,19 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OldSdkTest.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="MapCore.cs" />
+    <Compile Include="MapItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CertSdk\CertSdk.csproj">
-      <Project>{7a3a14c6-5066-4862-a342-664096daf648}</Project>
-      <Name>CertSdk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XXF\XXF.csproj">
-      <Project>{9fd9fbb9-d253-4213-9f95-a5665391079e}</Project>
-      <Name>XXF</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

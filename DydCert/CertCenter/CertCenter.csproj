@@ -134,6 +134,7 @@
     <Compile Include="Controllers\AppgradeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\MonitorController.cs" />
     <Compile Include="Controllers\WorkLogController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -222,6 +223,10 @@
     <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiInvokeMap\ApiInvokeMap.csproj">
+      <Project>{f39e642a-039a-4a59-9b2b-fb9718a1d9c3}</Project>
+      <Name>ApiInvokeMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CertComm\CertComm.csproj">
       <Project>{e2c01c06-d910-4497-8a4f-0fa79b3799d8}</Project>
       <Name>CertComm</Name>
@@ -271,8 +276,8 @@
     <Content Include="Areas\CertApi\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\certcenter.pubxml" />
-    <None Include="Properties\PublishProfiles\认证中心.pubxml" />
+    <None Include="Properties\PublishProfiles\cc.pubxml" />
+    <Content Include="Views\Monitor\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

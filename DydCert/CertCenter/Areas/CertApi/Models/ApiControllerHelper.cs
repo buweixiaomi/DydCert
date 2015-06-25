@@ -11,7 +11,13 @@ namespace CertCenter.Areas.CertApi.Models
     {
         public static ActionResult Visit(Func<ActionResult> action, Controller c)
         {
+            var mapapi = ApiInvokeMap.MapCore.GetInstance();
+            mapapi.Increase(ConbineUrl(
+                c.ControllerContext.RouteData.Values["area"].ToString().ToLower(),
+                c.ControllerContext.RouteData.Values["controller"].ToString().ToLower(),
+                c.ControllerContext.RouteData.Values["action"].ToString().ToLower()));
             Task<ActionResult> t = new Task<ActionResult>(action);
+
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
             #region 失败
@@ -30,7 +36,7 @@ namespace CertCenter.Areas.CertApi.Models
             {
                 try
                 {
-                    System.IO.File.AppendAllText(c.Server.MapPath("~/ope" + DateTime.Now.ToString("yyMMdd") + ".log"), DateTime.Now.ToString() + " TIME:"+sw.Elapsed.TotalMinutes+" \r\n\tFormData:" + System.Web.HttpUtility.UrlDecode(c.Request.Form.ToString()) + "\r\n\tURL:" + c.Request.Url.ToString() + "\r\n");
+                    System.IO.File.AppendAllText(c.Server.MapPath("~/ope" + DateTime.Now.ToString("yyMMdd") + ".log"), DateTime.Now.ToString() + " TIME:" + sw.Elapsed.TotalMinutes + " \r\n\tFormData:" + System.Web.HttpUtility.UrlDecode(c.Request.Form.ToString()) + "\r\n\tURL:" + c.Request.Url.ToString() + "\r\n");
                 }
                 catch (Exception ex) { }
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
@@ -60,6 +66,15 @@ namespace CertCenter.Areas.CertApi.Models
                 sresult.Data = r;
                 return sresult;
             }
+        }
+
+        public static string ConbineUrl(string area, string controller, string action)
+        {
+            return string.Format("{0}{1}{2}",
+                string.IsNullOrEmpty(area)?"":"/"+area,
+                string.IsNullOrEmpty(controller)?"":"/"+controller,
+                string.IsNullOrEmpty(action)?"":"/"+action,
+                );
         }
     }
 }
