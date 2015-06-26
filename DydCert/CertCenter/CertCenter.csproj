@@ -164,6 +164,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\monitormap.js" />
     <Content Include="Content\xpdialog.css" />
     <Content Include="Content\zTree\img\diy\1_close.png" />
     <Content Include="Content\zTree\img\diy\1_open.png" />

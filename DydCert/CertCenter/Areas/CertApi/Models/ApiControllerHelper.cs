@@ -13,7 +13,7 @@ namespace CertCenter.Areas.CertApi.Models
         {
             var mapapi = ApiInvokeMap.MapCore.GetInstance();
             mapapi.Increase(ConbineUrl(
-                c.ControllerContext.RouteData.Values["area"].ToString().ToLower(),
+                XXF.Db.LibConvert.NullToStr(c.ControllerContext.RouteData.Values["area"]).ToString().ToLower(),
                 c.ControllerContext.RouteData.Values["controller"].ToString().ToLower(),
                 c.ControllerContext.RouteData.Values["action"].ToString().ToLower()));
             Task<ActionResult> t = new Task<ActionResult>(action);
@@ -73,7 +73,7 @@ namespace CertCenter.Areas.CertApi.Models
             return string.Format("{0}{1}{2}",
                 string.IsNullOrEmpty(area)?"":"/"+area,
                 string.IsNullOrEmpty(controller)?"":"/"+controller,
-                string.IsNullOrEmpty(action)?"":"/"+action,
+                string.IsNullOrEmpty(action)?"":"/"+action
                 );
         }
     }

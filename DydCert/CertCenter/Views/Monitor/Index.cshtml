@@ -4,6 +4,23 @@
 }
 
 <h2>Index</h2>
+<div id="log" style="width:500px; height:500px; float:right; color:white; background-color:gray; overflow:auto;"></div>
+
+<div id="mymap"  style="width:600px; height:500px; border:1px solid gray; background-color:#ddc1c1;"></div>
 @section Scripts{
-    
-    }
+    <style type="text/css">
+        #mymap { position:relative;}
+        #mymap canvas { position:absolute; left:0; top:0; }
+    </style>
+    <script src="/Content/monitormap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            monitormap.init("mymap", 2000);
+            monitormap.start();
+        });
+
+    </script>
+
+    <script type="text/javascript">
+    </script>
+}
