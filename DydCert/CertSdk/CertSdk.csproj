@@ -35,6 +35,7 @@
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
@@ -49,6 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="easysdk\EasyChain.cs" />
+    <Compile Include="easysdk\Sdk.cs" />
+    <Compile Include="newsdk\CertChain.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="newsdk\Sdk.cs" />
+    <Compile Include="Token.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="old\api.cs" />
     <Compile Include="old\AppCache.cs" />
     <Compile Include="old\AuthToken.cs" />
@@ -58,6 +67,9 @@
     <Compile Include="old\CertCenterProvider.cs" />
     <Compile Include="old\CertCode.cs" />
     <Compile Include="old\ServiceCertType.cs" />
+    <Compile Include="OnlineCert.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +78,7 @@
       <Name>XXF</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
