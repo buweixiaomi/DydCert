@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CertSdk.easysdk
 {
-    public class EasyChain
+    public class EasyChain : ISdk
     {
 
         private List<EasyChainItem> tokens = new List<EasyChainItem>();

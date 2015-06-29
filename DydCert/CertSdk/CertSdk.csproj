@@ -51,10 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="easysdk\EasyChain.cs" />
-    <Compile Include="easysdk\Sdk.cs" />
+    <Compile Include="ISdk.cs" />
     <Compile Include="newsdk\CertChain.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="newsdk\Sdk.cs" />
+    <Compile Include="SdkProvider.cs" />
     <Compile Include="Token.cs">
       <SubType>Code</SubType>
     </Compile>

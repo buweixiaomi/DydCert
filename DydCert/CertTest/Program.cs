@@ -10,11 +10,7 @@ namespace CertTest
     {
         static void Main(string[] args)
         {
-            object oj = null;
-            lock (oj)
-            { 
-            
-            }
+                
 
             //CertSdk.newsdk.CertChain.ChainNode headnode = new CertSdk.newsdk.CertChain.ChainNode();
             //var tmpnode = headnode;
