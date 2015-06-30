@@ -5,9 +5,10 @@ using System.Text;
 
 namespace CertSdk
 {
-    public class ISdk
+    public interface ISdk
     {
-        public Token Get(string token);
-        public void Add(Token t);
+        Token Get(string token);
+        void Add(Token t);
+        List<Token> GetTokens();
     }
 }

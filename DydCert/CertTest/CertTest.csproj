@@ -41,12 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewSdkTest.cs" />
     <Compile Include="OldSdkTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReuquetTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiInvokeMap\ApiInvokeMap.csproj">
+      <Project>{f39e642a-039a-4a59-9b2b-fb9718a1d9c3}</Project>
+      <Name>ApiInvokeMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CertSdk\CertSdk.csproj">
       <Project>{7a3a14c6-5066-4862-a342-664096daf648}</Project>
       <Name>CertSdk</Name>

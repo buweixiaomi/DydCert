@@ -9,7 +9,7 @@ namespace CertSdk.easysdk
     {
 
         private List<EasyChainItem> tokens = new List<EasyChainItem>();
-        private int _maxlength = 1000000;
+        private int _maxlength = 50000;//000;
         private int _currlength = 0;
         private System.Threading.Thread maintance_thread = null;
         private static EasyChain Instance = new EasyChain();
@@ -28,10 +28,10 @@ namespace CertSdk.easysdk
                 {
                     if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.3")))
                     {
-                        Sort();
+                      Sort();
                         if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.8")))
                         {
-                            BatchDelete();
+                         BatchDelete();
                         }
                     }
                     System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Convert.ToDouble(GetConfig("MainSleepMins", "10"))));
@@ -46,12 +46,15 @@ namespace CertSdk.easysdk
             {
                 if (_currlength == _maxlength)
                     Delete();
+
+
                 tokens.Add(new EasyChainItem()
                 {
                     accesscount = 0,
                     used = false,
                     token = t
                 });
+                _currlength++;
             }
         }
 
@@ -63,6 +66,7 @@ namespace CertSdk.easysdk
                 if (tokens.Count > 0)
                 {
                     tokens.RemoveAt(tokens.Count - 1);
+                    _currlength--;
                 }
             }
         }
@@ -71,9 +75,11 @@ namespace CertSdk.easysdk
         {
             lock (tokens)
             {
+              int c_c=   tokens.Count(x => x.used == false);
                 tokens.RemoveAll(x => x.used == false);
                 foreach (var a in tokens)
                     a.used = false;
+                _currlength -= c_c;
             }
         }
 
@@ -90,16 +96,19 @@ namespace CertSdk.easysdk
 
         public Token Get(string token)
         {
-            foreach (var a in tokens)
+            lock (tokens)
             {
-                if (a.token.token == token)
+                foreach (var a in tokens)
                 {
-                    lock (a.token)
+                    if (a.token.token == token)
                     {
-                        a.accesscount++;
-                        a.used = true;
+                        lock (a.token)
+                        {
+                            a.accesscount++;
+                            a.used = true;
+                        }
+                        return a.token;
                     }
-                    return a.token;
                 }
             }
             return null;
@@ -116,6 +125,21 @@ namespace CertSdk.easysdk
             public int accesscount { get; set; }
             public Token token { get; set; }
             public bool used { get; set; }
+        }
+
+        public List<Token> GetTokens()
+        {
+            List<Token> ttt = new List<Token>();
+            //foreach (var a in tokens)
+            //{
+            //    ttt.Add(a.token);
+            //}
+            return ttt;
+        }
+
+        public static ISdk GetInstance()
+        {
+            return Instance;
         }
     }
 }

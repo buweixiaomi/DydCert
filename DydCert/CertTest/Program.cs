@@ -10,7 +10,11 @@ namespace CertTest
     {
         static void Main(string[] args)
         {
-                
+
+            NewSdkTest nst = new NewSdkTest();
+            nst.Start();
+
+            Console.Read();
 
             //CertSdk.newsdk.CertChain.ChainNode headnode = new CertSdk.newsdk.CertChain.ChainNode();
             //var tmpnode = headnode;
@@ -38,7 +42,6 @@ namespace CertTest
             //sw.Stop();
             //Console.WriteLine("用时{0}ms", sw.ElapsedMilliseconds);
             //Console.Read();
-
             //for (int i = 0; i < 1000; i++)
             //{
             //    System.Threading.Thread t = new System.Threading.Thread(() =>

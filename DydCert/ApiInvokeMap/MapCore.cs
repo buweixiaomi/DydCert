@@ -30,6 +30,7 @@ namespace ApiInvokeMap
             lock (item)
             {
                 item.count++;
+
             }
         }
         public void Decrease(string url)
@@ -44,12 +45,15 @@ namespace ApiInvokeMap
 
         private MapItem GetItemOrAdd(string url)
         {
-            var item = items.FirstOrDefault(x => x.url == url);
-            if (item == null)
+            lock (lockaddobj)
             {
-                item = AddItem(url);
+                var item = items.FirstOrDefault(x => x.url == url);
+                if (item == null)
+                {
+                    item = AddItem(url);
+                }
+                return item;
             }
-            return item;
         }
 
         private MapItem AddItem(string url)
@@ -93,7 +97,7 @@ namespace ApiInvokeMap
                 threadtowrap = null;
             }
             threadtowrap = new System.Threading.Thread(DoWrap);
-           threadtowrap.Start();
+            threadtowrap.Start();
         }
         public int GetWrapTime()
         {

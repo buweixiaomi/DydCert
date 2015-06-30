@@ -26,7 +26,7 @@ namespace CertSdk
             return t;
         }
 
-        public void Process_login(Token t)
+        private void Process_login(Token t)
         {
             if (t != null)
             {
@@ -40,13 +40,14 @@ namespace CertSdk
 
         public Token GetToken(string token)
         {
+            ApiInvokeMap.MapCore.GetInstance().Increase("GetToken");
             var tokenobj = isdk.Get(token);
             if (tokenobj != null)
             {
                 return tokenobj;
             }
             tokenobj = oc.ReqGetTokenInfo(token);
-            if (token != null)
+            if (tokenobj != null)
             {
                 isdk.Add(tokenobj);
             }
@@ -58,6 +59,10 @@ namespace CertSdk
             
         }
 
+        public List<Token> GetAll()
+        {
+            return isdk.GetTokens();
+        }
 
     }
 }

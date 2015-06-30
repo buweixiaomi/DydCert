@@ -457,7 +457,7 @@ namespace CertCenter.Areas.CertApi.Models
                         string dqbm = ds.Tables[0].Rows[0]["f_shdqbm"].ToString();
                         string t = XXF.Db.DbConfig.GetConfig("ShopAreaConnectString");
                         throw new Exception("no show");
-                       // constr = XXF.Db.DbAreaRule.ShopAreaPartitionRule(t, Convert.ToInt32(dqbm));
+                        // constr = XXF.Db.DbAreaRule.ShopAreaPartitionRule(t, Convert.ToInt32(dqbm));
                     }
                     break;
                 case CertCenter.Models.DbModels.TokenType.managetoken:

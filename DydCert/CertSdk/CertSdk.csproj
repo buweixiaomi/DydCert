@@ -73,6 +73,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiInvokeMap\ApiInvokeMap.csproj">
+      <Project>{f39e642a-039a-4a59-9b2b-fb9718a1d9c3}</Project>
+      <Name>ApiInvokeMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XXF\XXF.csproj">
       <Project>{9fd9fbb9-d253-4213-9f95-a5665391079e}</Project>
       <Name>XXF</Name>

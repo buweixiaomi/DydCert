@@ -11,25 +11,16 @@ namespace CertCenter.Areas.CertApi.Models
     {
         public static ActionResult Visit(Func<ActionResult> action, Controller c)
         {
+
             var mapapi = ApiInvokeMap.MapCore.GetInstance();
             mapapi.Increase(ConbineUrl(
                 XXF.Db.LibConvert.NullToStr(c.ControllerContext.RouteData.Values["area"]).ToString().ToLower(),
                 c.ControllerContext.RouteData.Values["controller"].ToString().ToLower(),
                 c.ControllerContext.RouteData.Values["action"].ToString().ToLower()));
+            return action();
             Task<ActionResult> t = new Task<ActionResult>(action);
-
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
-            #region 失败
-            //t.ContinueWith((x) =>
-            //{
-            //    try
-            //    {
-            //        System.IO.File.AppendAllText(c.Server.MapPath("~/error.log"), DateTime.Now.ToString() + "\r\n\tURL:" + c.Request.Url.ToString() + "\r\n\tFormData:" + System.Web.HttpUtility.UrlDecode(c.Request.Form.ToString()) + "\r\n\tException:" + x.Exception.StackTrace + "\r\n\t" + x.Exception.Message + "\r\n");
-            //    }
-            //    catch { }
-            //}, TaskContinuationOptions.OnlyOnFaulted);
-            #endregion
 
             #region 成功
             t.ContinueWith((x) =>

@@ -11,6 +11,25 @@ namespace CertCenter.Areas.CertApi.Controllers
         CertCenter.Models.DbModels.TokenType tokentype = CertCenter.Models.DbModels.TokenType.usertoken;
         public ActionResult Get(string appid, string userid, string timespan, string sign, string pwd)
         {
+
+            //JsonResult jsonr = new JsonResult();
+            //jsonr.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            //CertComm.ServerResult sr = new CertComm.ServerResult();
+            //string msg = "";
+            //jsonr.Data = sr;
+            //sr.code = 1;
+            //sr.response = new CertCenter.Models.DbModels.tb_token()
+            //{
+
+            //    appid = "",
+            //    createtime = DateTime.Now,
+            //    expires = DateTime.Now,
+            //    id = "",
+            //    token = Guid.NewGuid().ToString().Replace("-", ""),
+            //    userid = "",
+            //    username = ""
+            //};
+            //return jsonr;
             return Models.ApiControllerHelper.Visit(() =>
             {
                 return Models.ApiCommDal.GetToken(this, tokentype);
