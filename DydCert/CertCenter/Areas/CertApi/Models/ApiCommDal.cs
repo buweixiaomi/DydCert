@@ -20,6 +20,18 @@ namespace CertCenter.Areas.CertApi.Models
             CertComm.ServerResult sr = new CertComm.ServerResult();
             string msg = "";
             jsonr.Data = sr;
+
+            //sr.code = 1;
+            //sr.response = new CertCenter.Models.DbModels.tb_token()
+            //{
+            //    appid = "abc",
+            //    token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            //    userid = "ad",
+            //    id = "",
+            //    username = "xp"
+            //};
+            //return jsonr;
+
             Dictionary<string, string> para = CertCenter.Models.CertCenterComm.GetRequestPara(c, new string[] { "appid", "userid", "timespan", "sign", "pwd" });
             sr.code = CertCenter.Models.CertCenterComm.ValiFields(para, out msg);
             if (sr.code < 0)

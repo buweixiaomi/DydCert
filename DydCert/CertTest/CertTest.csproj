@@ -41,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InitToken.cs" />
     <Compile Include="NewSdkTest.cs" />
     <Compile Include="OldSdkTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReuquetTest.cs" />
+    <Compile Include="SdkNewTester.cs" />
+    <Compile Include="TestDataReady.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApiInvokeMap\ApiInvokeMap.csproj">

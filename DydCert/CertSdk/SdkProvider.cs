@@ -46,6 +46,8 @@ namespace CertSdk
             {
                 return tokenobj;
             }
+
+            ApiInvokeMap.MapCore.GetInstance().Increase("ReqGetTokenInfo");
             tokenobj = oc.ReqGetTokenInfo(token);
             if (tokenobj != null)
             {
@@ -64,5 +66,9 @@ namespace CertSdk
             return isdk.GetTokens();
         }
 
+        public void Add(Token token)
+        {
+            isdk.Add(token);
+        }
     }
 }

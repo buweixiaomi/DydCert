@@ -7,7 +7,7 @@ namespace CertSdk.newsdk
 {
     public class CertChain : ISdk
     {
-        private int _maxlength = 25000;//000;//100万
+        private int _maxlength = 100000;//000;//100万
         private int _currlength = 0;
         private ChainNode _headNode = null;
         private ChainNode _tailNode = null;

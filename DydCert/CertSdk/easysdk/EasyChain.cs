@@ -28,10 +28,10 @@ namespace CertSdk.easysdk
                 {
                     if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.3")))
                     {
-                      Sort();
+                        Sort();
                         if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.8")))
                         {
-                         BatchDelete();
+                            BatchDelete();
                         }
                     }
                     System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Convert.ToDouble(GetConfig("MainSleepMins", "10"))));
@@ -75,7 +75,7 @@ namespace CertSdk.easysdk
         {
             lock (tokens)
             {
-              int c_c=   tokens.Count(x => x.used == false);
+                int c_c = tokens.Count(x => x.used == false);
                 tokens.RemoveAll(x => x.used == false);
                 foreach (var a in tokens)
                     a.used = false;
@@ -130,10 +130,17 @@ namespace CertSdk.easysdk
         public List<Token> GetTokens()
         {
             List<Token> ttt = new List<Token>();
-            //foreach (var a in tokens)
-            //{
-            //    ttt.Add(a.token);
-            //}
+            lock (tokens)
+            {
+                int maxcount = 100;
+                foreach (var t in tokens)
+                {
+                    ttt.Add(t.token);
+                    maxcount--;
+                    if (maxcount < 0)
+                        break;
+                }
+            }
             return ttt;
         }
 

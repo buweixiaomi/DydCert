@@ -29,7 +29,7 @@ namespace CertTest
         {
 
             int[] para = obj == null ? new int[] { 1, 1 } : (int[])obj;
-            using (XXF.Db.DbConn dbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.205", "dyd_new_main", "sa", "Xx~!@#"))
+            using (XXF.Db.DbConn dbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
             {
                 dbconn.Open();
                 string sql_count = "select count(1) from tb_customer";

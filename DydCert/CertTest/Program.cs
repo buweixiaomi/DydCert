@@ -10,7 +10,19 @@ namespace CertTest
     {
         static void Main(string[] args)
         {
+            SdkNewTester sdknt = new SdkNewTester();
+            sdknt.Start();
+            Console.Read();
 
+            InitToken toknsin = new InitToken();
+            toknsin.Start();
+            Console.Read();
+            return;
+
+            //TestDataReady tdr = new TestDataReady();
+            //tdr.Start();
+            //Console.Read();
+            //return;
             NewSdkTest nst = new NewSdkTest();
             nst.Start();
 

@@ -43,7 +43,6 @@ namespace CertSdk
         /// <returns></returns>
         public Token ReqGetTokenInfo(string token)
         {
-            ApiInvokeMap.MapCore.GetInstance().Increase("ReqGetTokenInfo");
             List<ParmField> para = new List<ParmField>();
             para.Add(new StringField("token", token ?? ""));
             return ApiHelper<Token>(() =>
