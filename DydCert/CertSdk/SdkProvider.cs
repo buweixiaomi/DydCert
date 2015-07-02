@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -41,24 +42,25 @@ namespace CertSdk
         public Token GetToken(string token)
         {
             ApiInvokeMap.MapCore.GetInstance().Increase("GetToken");
-            var tokenobj = isdk.Get(token);
+            Token tokenobj = isdk.Get(token);
             if (tokenobj != null)
             {
+                tokenobj.id = "[Local]";
                 return tokenobj;
             }
-
             ApiInvokeMap.MapCore.GetInstance().Increase("ReqGetTokenInfo");
             tokenobj = oc.ReqGetTokenInfo(token);
             if (tokenobj != null)
             {
+                tokenobj.id = "[Online]";
                 isdk.Add(tokenobj);
             }
             return tokenobj;
         }
 
         public void Logout(string token)
-        { 
-            
+        {
+
         }
 
         public List<Token> GetAll()
@@ -69,6 +71,16 @@ namespace CertSdk
         public void Add(Token token)
         {
             isdk.Add(token);
+        }
+
+        public int GetLength()
+        {
+            return isdk.GetLength();
+        }
+
+        public void WriteTopToFile(int c)
+        {
+            isdk.WriteTopToFile(c);
         }
     }
 }

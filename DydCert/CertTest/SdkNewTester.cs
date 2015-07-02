@@ -19,27 +19,25 @@ namespace CertTest
             StartMonitor();
 
             //准备 999000 token
-            PrepareTokens(99000);
-
+            PrepareTokens(99950);//999500
             //准备验证token
-            GetSomeAuthToken(100);
+            GetSomeAuthToken(10000);
 
             //测试用户
-            GetTestUsers(100);
+            GetTestUsers(10000);
 
             Thread.Sleep(2000);
             //开始测试
             //开始大并测试
             Console.WriteLine("5分钟测试");
-            TestAuth(100, 5);
-            TestLogin(30, 5);
+            TestAuth(200, 2);
+           // TestLogin(60, 5);
             Thread.Sleep(TimeSpan.FromMinutes(5));
 
             Thread.Sleep(2000);
-            Console.WriteLine("5分钟测试");
-            TestAuth(500, 5);
-            TestLogin(100, 5);
-            Thread.Sleep(TimeSpan.FromMinutes(5));
+            PrintMenoryCount();
+            WriteTopToFile(1000000);
+
 
             Thread.Sleep(2000);
             Console.WriteLine("5分钟测试");
@@ -62,13 +60,14 @@ namespace CertTest
 
                     // int allcount = 999000;// (int)dbconn.ExecuteScalar(sql_count, null);
 
-                    int pagesize = 10000;
+                    int pagesize = 200000;
 
                     StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < allcount; i = i + pagesize)
+                    int i = 0;
+                    while (true)
                     {
                         sb.Clear();
-                        string sql = "select  * from (select row_number() over(order by id) as Rownum,* from usertoken ) A where A.Rownum between " + (i + 1) + " and " + (i + pagesize) + "";
+                        string sql = "select  * from (select row_number() over(order by token) as Rownum,* from usertoken ) A where A.Rownum between " + (i + 1) + " and " + (i + pagesize) + "";
                         DataTable tb = qxdbconn.SqlToDataTable(sql, null);
                         foreach (DataRow dr in tb.Rows)
                         {
@@ -83,7 +82,11 @@ namespace CertTest
                                 username = dr["username"].ToString()
                             });
                             _PrepareTokens_count++;
+                            if (_PrepareTokens_count >= allcount)
+                                break;
                         }
+                        if (_PrepareTokens_count >= allcount)
+                            break;
                     }
                 }
             });
@@ -104,11 +107,29 @@ namespace CertTest
             Console.WriteLine("准备内存token完成！");
         }
         private int _GetSomeAuthToken_count = 0;
-        public void GetSomeAuthToken(int count)
+        private void GetSomeAuthToken(int count)
         {
             Console.WriteLine("正在准备验证用token...");
             Thread maint = new Thread(() =>
             {
+
+                using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
+                {
+                    qxdbconn.Open();
+                    int allcount = (int)qxdbconn.ExecuteScalar("select count(1) from testusertoken", null);
+                    if (allcount >= count)
+                    {
+                        string sql = "select top " + count + " * from testusertoken";
+                        DataTable tb = qxdbconn.SqlToDataTable(sql, null);
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            willauthtokens.Add(dr["token"].ToString());
+                            _GetSomeAuthToken_count++;
+                        }
+                        return;
+                    }
+                }
+
                 int pagesize = 50;
                 using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "dyd_new_qx", "sa", "Xx~!@#"))
                 {
@@ -119,7 +140,7 @@ namespace CertTest
                     {
                         Random r = new Random();
                         int start_index = r.Next(1, allcount - pagesize);
-                        string sql = "select top " + pagesize + " * from (select row_number() over(order by id) as Rownum,token from usertoken ) A where A.Rownum >=" + start_index + "";
+                        string sql = "select top " + pagesize + " * from (select row_number() over(order by token) as Rownum,token from usertoken ) A where A.Rownum >=" + start_index + "";
                         DataTable tb = qxdbconn.SqlToDataTable(sql, null);
                         foreach (DataRow dr in tb.Rows)
                         {
@@ -128,6 +149,7 @@ namespace CertTest
                         }
                     }
                 }
+                WriteTestTokenToDB();
             });
             Thread m = new Thread(() =>
             {
@@ -147,11 +169,29 @@ namespace CertTest
         }
 
         private int _GetTestUsers_count = 0;
-        public void GetTestUsers(int count)
+        private void GetTestUsers(int count)
         {
             Console.WriteLine("正在准备登录用户...");
             Thread maint = new Thread(() =>
             {
+
+                using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
+                {
+                    qxdbconn.Open();
+                    int allcount = (int)qxdbconn.ExecuteScalar("select count(1) from testuser", null);
+                    if (allcount >= count)
+                    {
+                        string sql = "select top " + count + " * from testuser";
+                        DataTable tb = qxdbconn.SqlToDataTable(sql, null);
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            willtestusers.Add(dr["f_yhzh"].ToString());
+                            _GetTestUsers_count++;
+                        }
+                        return;
+                    }
+                }
+
                 int pagesize = 50;
                 using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
                 {
@@ -161,7 +201,7 @@ namespace CertTest
                     {
                         Random r = new Random();
                         int start_index = r.Next(1, allcount - pagesize);
-                        string sql = "select top " + pagesize + " * from (select row_number() over(order by f_id) as Rownum,* from tb_customer ) A where A.Rownum >=" + start_index + "";
+                        string sql = "select top " + pagesize + " A.f_yhzh from (select row_number() over(order by f_id) as Rownum,f_yhzh from tb_customer ) A where A.Rownum >=" + start_index + "";
                         DataTable tb = qxdbconn.SqlToDataTable(sql, null);
                         foreach (DataRow dr in tb.Rows)
                         {
@@ -170,6 +210,7 @@ namespace CertTest
                         }
                     }
                 }
+                WriteTestUserToDB();
             });
             Thread m = new Thread(() =>
             {
@@ -190,7 +231,7 @@ namespace CertTest
 
 
         private bool TestLogin_cancel_token = false;
-        public void TestLogin(int process, int mins)
+        private void TestLogin(int process, int mins)
         {
             Console.WriteLine("正在测试登录，线程数:{0} 测试时间:{1}", process, mins);
             for (int i = 0; i < process; i++)
@@ -222,7 +263,7 @@ namespace CertTest
         }
 
         private bool TestAuth_cancel_Token = false;
-        public void TestAuth(int process, int mins)
+        private void TestAuth(int process, int mins)
         {
             Console.WriteLine("正在测试验证，线程数:{0} 测试时间:{1}", process, mins);
             for (int i = 0; i < process; i++)
@@ -237,7 +278,7 @@ namespace CertTest
                         sw.Start();
                         var token = sp.GetToken(strtoken);
                         sw.Stop();
-                        Console.WriteLine("[验证]token:{0,36} time:{1,10}ms", token == null ? "" : token.token, sw.ElapsedMilliseconds);
+                        Console.WriteLine("[验证]token:{0,36} {2,6} time:{1,10}ms", token == null ? "" : token.token, sw.ElapsedMilliseconds, token == null ? "" : token.id);
                         if (TestAuth_cancel_Token)
                             return;
                     }
@@ -253,8 +294,19 @@ namespace CertTest
             tm.Start();
         }
 
+        private void PrintMenoryCount()
+        {
+            Console.WriteLine("内存数据量={0}", sp.GetLength());
+        }
 
-        public Thread StartMonitor()
+        private void WriteTopToFile(int c)
+        {
+            Console.WriteLine("正在写文件...");
+            sp.WriteTopToFile(c);
+            Console.WriteLine("写文件完成");
+        }
+
+        private Thread StartMonitor()
         {
 
             Thread t = new Thread(() =>
@@ -283,5 +335,46 @@ namespace CertTest
             return t;
         }
 
+        private void WriteTestTokenToDB()
+        {
+            using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
+            {
+                qxdbconn.Open();
+                StringBuilder sb = new StringBuilder();
+                int pagesize = 1000;
+                int i = 0;
+                while (i < willauthtokens.Count)
+                {
+                    sb.Clear();
+                    for (int j = 0; j < pagesize && i < willauthtokens.Count; j++)
+                    {
+                        sb.AppendFormat("insert into testusertoken(token) values('{0}');\r\n", willauthtokens[i]);
+                        i++;
+                    }
+                    qxdbconn.ExecuteSql(sb.ToString(), null);
+                }
+            }
+        }
+
+        private void WriteTestUserToDB()
+        {
+            using (XXF.Db.DbConn qxdbconn = XXF.Db.DbConn.CreateConn(XXF.Db.DbType.SQLSERVER, "192.168.17.236", "cert_test_main", "sa", "Xx~!@#"))
+            {
+                qxdbconn.Open();
+                StringBuilder sb = new StringBuilder();
+                int pagesize = 1000;
+                int i = 0;
+                while (i < willtestusers.Count)
+                {
+                    sb.Clear();
+                    for (int j = 0; j < pagesize && i < willtestusers.Count; j++)
+                    {
+                        sb.AppendFormat("insert into testuser(f_yhzh) values('{0}');\r\n", willtestusers[i]);
+                        i++;
+                    }
+                    qxdbconn.ExecuteSql(sb.ToString(), null);
+                }
+            }
+        }
     }
 }

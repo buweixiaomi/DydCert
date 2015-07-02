@@ -7,13 +7,13 @@ namespace CertSdk.newsdk
 {
     public class CertChain : ISdk
     {
-        private int _maxlength = 100000;//000;//100万
+        private int _maxlength = 1000000;//100万
         private int _currlength = 0;
         private ChainNode _headNode = null;
         private ChainNode _tailNode = null;
 
-        private object init_add_look_obj = new object();
-        private object init_sort_look_obj = new object();
+        // private object init_add_look_obj = new object();
+        //   private object init_sort_look_obj = new object();
         private object add_look_obj = new object();
         private static CertChain Instance = new CertChain();
         private System.Threading.Thread maintance_thread = null;
@@ -35,13 +35,13 @@ namespace CertSdk.newsdk
                 {
                     if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.3")))
                     {
-                       // Sort();
+                        Sort();
                         if ((_currlength / (double)_maxlength) > Convert.ToDouble(GetConfig("SortPercent", "0.8")))
                         {
                             //  BatchDelete();
                         }
                     }
-                    System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Convert.ToDouble(GetConfig("MainSleepMins", "10"))));
+                    System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Convert.ToDouble(GetConfig("MainSleepMins", "1"))));
                 }
             }
             catch (Exception ex)
@@ -92,11 +92,13 @@ namespace CertSdk.newsdk
         private void Sort()
         {
             ApiInvokeMap.MapCore.GetInstance().Increase("Sort");
-            lock (init_sort_look_obj)
+            lock (add_look_obj)
             {
+                if (_currlength == 0)
+                    return;
                 List<ChainNode> tosortlist = new List<ChainNode>(_currlength);
                 var tempnode = _headNode;
-                var curr_first = _headNode;
+                //var curr_first = _headNode;
                 while (tempnode != null)
                 {
                     tosortlist.Add(ChainNode.ShallowClone(tempnode));
@@ -104,42 +106,32 @@ namespace CertSdk.newsdk
                     tempnode = tempnode.nextNode;
                 }
 
-                tosortlist.Sort((x, y) => { return x.accessCount - y.accessCount; });
+                tosortlist.Sort((x, y) => { return y.accessCount - x.accessCount; });
 
                 //relink
-                if (tosortlist.Count > 0)
+                tosortlist[0].preNode = null;
+                tosortlist[tosortlist.Count - 1].nextNode = null;
+                tosortlist[0].accessCount = 0;
+                tosortlist[tosortlist.Count - 1].accessCount = 0;
+                if (tosortlist.Count > 1)
                 {
-                    tosortlist[0].preNode = null;
-                    tosortlist[tosortlist.Count - 1].nextNode = null;
-                    tosortlist[0].accessCount = 0;
-                    tosortlist[tosortlist.Count - 1].accessCount = 0;
-                    if (tosortlist.Count > 1)
-                    {
-                        tosortlist[0].nextNode = tosortlist[1];
-                        tosortlist[tosortlist.Count - 1].preNode = tosortlist[tosortlist.Count - 2];
-                    }
-                    else
-                    {
-                        tosortlist[0].nextNode = null;
-                        tosortlist[tosortlist.Count - 1].preNode = null;
-                    }
-                    for (int i = 1; i < tosortlist.Count - 1; i++)
-                    {
-                        tosortlist[i].preNode = tosortlist[i - 1];
-                        tosortlist[i].nextNode = tosortlist[i + 1];
-                        tosortlist[i].accessCount = 0;
-                    }
+                    tosortlist[0].nextNode = tosortlist[1];
+                    tosortlist[tosortlist.Count - 1].preNode = tosortlist[tosortlist.Count - 2];
                 }
-                lock (_headNode)//避免 _headNode==curr_first 的情况
+                else
                 {
-                    _tailNode = tosortlist[tosortlist.Count - 1];
-                    //连接新添加的
-                    if (curr_first.preNode != null)
-                    {
-                        tosortlist[0].preNode = curr_first.preNode;
-                        curr_first.preNode.nextNode = tosortlist[0];
-                    }
+                    tosortlist[0].nextNode = null;
+                    tosortlist[tosortlist.Count - 1].preNode = null;
                 }
+                for (int i = 1; i < tosortlist.Count - 1; i++)
+                {
+                    tosortlist[i].preNode = tosortlist[i - 1];
+                    tosortlist[i].nextNode = tosortlist[i + 1];
+                    tosortlist[i].accessCount = 0;
+                }
+
+                _tailNode = tosortlist[tosortlist.Count - 1];
+                _headNode = tosortlist[0];
 
             }
         }
@@ -147,64 +139,51 @@ namespace CertSdk.newsdk
         private void Delete()
         {
             ApiInvokeMap.MapCore.GetInstance().Increase("Delete");
-            while (true)
+
+            lock (add_look_obj)
             {
-                // lock (_tailNode)
-                lock (add_look_obj)
+
+                if (_currlength == 0)
+                    return;
+
+                if (_tailNode.preNode != null)
                 {
-                    if (_tailNode.nextNode != null || _tailNode.abort)
-                        continue;
-                    if (_currlength == 0)
-                        break;
-                    _tailNode.abort = true;
-                    if (_tailNode.preNode != null)
-                    {
-                        _tailNode.preNode.nextNode = null;
-                        _tailNode = _tailNode.preNode;
-                        _currlength--;
-                    }
-                    else
-                    {
-                        _currlength = 0;
-                        _headNode = null;
-                        _tailNode = null;
-                    }
-                    break;
+                    _tailNode.preNode.nextNode = null;
+                    _tailNode = _tailNode.preNode;
+                    _currlength--;
+                }
+                else
+                {
+                    _currlength = 0;
+                    _headNode = null;
+                    _tailNode = null;
                 }
             }
+
         }
 
         public void Add(Token t)
         {
-            ApiInvokeMap.MapCore.GetInstance().Increase("Add");
-            if (_currlength == 0)
+            lock (add_look_obj)
             {
-                if (InitAdd(t))
+                ApiInvokeMap.MapCore.GetInstance().Increase("Add");
+                if (_currlength == 0)
                 {
-                    return;
-                }
-            }
-
-            while (true)
-            {
-                // lock (_headNode)
-                lock (add_look_obj)
-                {
-                    if (_headNode.preNode != null || _headNode.abort)
-                        continue;
-                    if (_currlength == _maxlength)
+                    if (InitAdd(t))
                     {
-                        Delete();
-                        continue;
+                        return;
                     }
-                    ChainNode nodeitem = new ChainNode(t);
-                    _headNode.preNode = nodeitem;
-                    nodeitem.nextNode = _headNode;
-
-                    _headNode = nodeitem;
-                    _currlength++;
-                    break;
                 }
+                if (_currlength == _maxlength)
+                {
+                    Delete();
+                }
+                ChainNode nodeitem = new ChainNode(t);
+                _headNode.preNode = nodeitem;
+                nodeitem.nextNode = _headNode;
+
+                _headNode = nodeitem;
+                _currlength++;
             }
 
         }
@@ -233,7 +212,7 @@ namespace CertSdk.newsdk
         private bool InitAdd(Token t)
         {
             ApiInvokeMap.MapCore.GetInstance().Increase("InitAdd");
-            lock (init_add_look_obj)
+            lock (add_look_obj)
             {
                 if (_currlength != 0)
                     return false;
@@ -293,6 +272,29 @@ namespace CertSdk.newsdk
                 t = t.preNode;
             }
             return ttt;
+        }
+
+
+        public int GetLength()
+        {
+            return _currlength;
+        }
+
+
+        public void WriteTopToFile(int topcount)
+        {
+            var n = _headNode;
+            int c = 0;
+            StringBuilder sb = new StringBuilder();
+            while (n != null)
+            {
+                sb.AppendFormat("{0,6} {1,4} {2,40} {3,15}\r\n ", n.accessCount, n.used, n.token.token, n.token.userid);
+                n = n.nextNode;
+                c++;
+                if (c >= topcount)
+                    break;
+            }
+            System.IO.File.AppendAllText("D:\\" + this.GetType().FullName + ".top.txt", sb.ToString());
         }
     }
 }

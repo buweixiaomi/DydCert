@@ -13,11 +13,11 @@ namespace CertTest
             SdkNewTester sdknt = new SdkNewTester();
             sdknt.Start();
             Console.Read();
-
-            InitToken toknsin = new InitToken();
-            toknsin.Start();
-            Console.Read();
             return;
+            //InitToken toknsin = new InitToken();
+            //toknsin.Start();
+            //Console.Read();
+            //return;
 
             //TestDataReady tdr = new TestDataReady();
             //tdr.Start();

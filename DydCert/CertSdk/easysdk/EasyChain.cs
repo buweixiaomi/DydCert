@@ -148,5 +148,25 @@ namespace CertSdk.easysdk
         {
             return Instance;
         }
+
+
+        public int GetLength()
+        {
+            return _currlength;
+        }
+
+
+        public void WriteTopToFile(int topcount)
+        {
+            StringBuilder sb = new StringBuilder();
+            lock (tokens)
+            {
+                for (int i = 0; i < topcount; i++)
+                {
+                    sb.AppendFormat("{0,6} {1,4} {2,40} {3,15}\r\n ", tokens[i].accesscount, tokens[i].used, tokens[i].token.token, tokens[i].token.userid);
+                }
+            }
+            System.IO.File.AppendAllText("D:\\" + this.GetType().FullName + ".top.txt", sb.ToString());
+        }
     }
 }

@@ -10,5 +10,8 @@ namespace CertSdk
         Token Get(string token);
         void Add(Token t);
         List<Token> GetTokens();
+        int GetLength();
+
+        void WriteTopToFile(int topcount);
     }
 }
