@@ -10,6 +10,21 @@ namespace CertTest
     {
         static void Main(string[] args)
         {
+            
+
+            string a = "a";
+            string b = "b";
+            string aa = "a+";
+            Console.WriteLine("a={0}", a.GetHashCode());
+            Console.WriteLine("b={0}", b.GetHashCode());
+            Console.WriteLine("aa={0}", aa.GetHashCode());
+            aa = aa.TrimEnd('+');
+            Console.WriteLine("a={0}", a.GetHashCode());
+            Console.WriteLine("b={0}", b.GetHashCode());
+            Console.WriteLine("aa={0}", aa.GetHashCode());
+            Console.Read();
+            return;
+
             SdkNewTester sdknt = new SdkNewTester();
             sdknt.Start();
             Console.Read();

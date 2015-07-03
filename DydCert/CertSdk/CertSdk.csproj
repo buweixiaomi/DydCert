@@ -54,6 +54,7 @@
     <Compile Include="ISdk.cs" />
     <Compile Include="newsdk\CertChain.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="newsdk\TwoNodeChain.cs" />
     <Compile Include="SdkProvider.cs" />
     <Compile Include="Token.cs">
       <SubType>Code</SubType>
